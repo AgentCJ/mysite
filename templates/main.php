@@ -1,3 +1,4 @@
+
 <main class="container">
     <section class="promo">
         <h2 class="promo__title">Нужен стафф для катки?</h2>
@@ -5,7 +6,7 @@
         <ul class="promo__list">
             <?php foreach ($categories as $category): ?>
             <li class="promo__item">
-                <a class="promo__link" href="pages/all-lots.html"><?= htmlspecialchars($category['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></a>
+                <a class="promo__link" href="/index.php"><?= htmlspecialchars($category['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></a>
             </li>
             <?php endforeach; ?>
         </ul>

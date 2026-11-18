@@ -4,6 +4,11 @@ require_once 'init.php';
 require_once 'functions.php';
 require_once 'helpers.php';
 
+if ($is_auth) {
+    http_response_code(403);
+    exit('403 Forbidden');
+}
+
 $categories = get_categories($link);
 
 $errors = [];

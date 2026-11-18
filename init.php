@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 const DB_HOST = "127.0.0.1";
 const DB_PORT = "3306";
 const DB_LOGIN = "root";
@@ -11,8 +13,9 @@ $link = $con;
 
 mysqli_set_charset($con, "utf8");
 
-$is_auth = false;      //$is_auth = rand(0, 1); 
-$user_name = '';      //$user_name = 'Сергей'; 
+$is_auth = isset($_SESSION['user']);
+$user_name = $is_auth ? $_SESSION['user']['name'] : '';
+$user_id = $is_auth ? (int) $_SESSION['user']['id'] : null; 
 
 if (!isset($title_name)) {
     $title_name = 'Главная';

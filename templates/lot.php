@@ -34,6 +34,20 @@
                         </div>
                     </div>
                 </div>
+                <?php if ($is_auth): ?>
+                    <form class="lot-item__form" action="#" method="post">
+                        <p class="lot-item__form-item">
+                    <label for="cost">Ваша ставка</label>
+                    <input
+                        type="number"
+                        name="cost"
+                        id="cost"
+                        placeholder="Введите сумму"
+                        >
+                        </p>
+                    <button type="submit" class="button">Сделать ставку</button>
+                    </form>
+                <?php endif; ?>
             </div>
         </div>
     </section>

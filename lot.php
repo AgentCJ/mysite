@@ -18,10 +18,10 @@ if (!$lot) {
     $title_name = 'Страница не найдена';
 } else {
     $page_content = include_template('lot.php', [
-        'lot'        => $lot,
-        'categories' => $categories,
+    'lot'        => $lot,
+    'categories' => $categories,
+    'is_auth'    => $is_auth,
     ]);
-    $title_name = $lot['title'];
 }
 
 $layout_content = include_template('layout.php', [

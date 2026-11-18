@@ -4,6 +4,11 @@ require_once('init.php');
 require_once('functions.php');
 require_once('helpers.php');
 
+if (!$is_auth) {
+    http_response_code(403);
+    exit('403 Forbidden');
+}
+
 $categories = get_categories($con);
 
 $errors = [];
@@ -16,7 +21,8 @@ $lot = [
     'expiration_date' => '',
 ];
 
-$author_id = 1; 
+// ID автора берём из текущей сессии
+$author_id = $user_id;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $lot = array_merge($lot, $_POST);
