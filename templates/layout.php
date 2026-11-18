@@ -1,3 +1,4 @@
+
 <?php
 $is_auth = isset($_SESSION['user']);
 $user_name = $is_auth ? $_SESSION['user']['name'] : '';
@@ -58,7 +59,7 @@ $user_name = $is_auth ? $_SESSION['user']['name'] : '';
         <ul class="nav__list container">
             <?php foreach ($categories as $category): ?>
                 <li class="nav__item">
-                    <a href="/index.php"><?= htmlspecialchars($category["name"], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></a>
+                    <a href="/index.php?category_id=<?= (int) $category['id'] ?>"><?= htmlspecialchars($category["name"], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></a>
                 </li>
             <?php endforeach; ?>
         </ul>
