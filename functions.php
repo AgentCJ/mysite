@@ -1,3 +1,4 @@
+
 <?php
 
 date_default_timezone_set('Europe/Moscow');
@@ -68,10 +69,13 @@ function get_categories(mysqli $con): array
 }
 
 /**
- * Возвращает все лоты или только лоты указанного пользователя.
- * Если user_id не передан — возвращает все лоты.
+ * Возвращает лоты:
+ * - все, если фильтры не переданы;
+ * - только лоты указанного пользователя;
+ * - только лоты выбранной категории;
+ * - лоты, подходящие под оба фильтра.
  */
-function get_lots(mysqli $con, ?int $user_id = null): array
+function get_lots(mysqli $con, ?int $user_id = null, ?int $category_id = null): array
 {
     $sql = "SELECT
                 l.id,
@@ -85,41 +89,57 @@ function get_lots(mysqli $con, ?int $user_id = null): array
             FROM lots l
             JOIN categories c ON l.category_id = c.id";
 
+    $conditions = [];
+    $params = [];
+    $types = '';
+
     if ($user_id !== null) {
-        $sql .= " WHERE l.author_id = ?";
+        $conditions[] = 'l.author_id = ?';
+        $params[] = $user_id;
+        $types .= 'i';
     }
 
-    $sql .= " ORDER BY l.creation_date DESC";
+    if ($category_id !== null) {
+        $conditions[] = 'l.category_id = ?';
+        $params[] = $category_id;
+        $types .= 'i';
+    }
 
-    if ($user_id !== null) {
-        $stmt = mysqli_prepare($con, $sql);
+    if ($conditions) {
+        $sql .= ' WHERE ' . implode(' AND ', $conditions);
+    }
 
-        if (!$stmt) {
-            die('Ошибка подготовки запроса: ' . mysqli_error($con));
-        }
+    $sql .= ' ORDER BY l.creation_date DESC';
 
-        mysqli_stmt_bind_param($stmt, 'i', $user_id);
-        mysqli_stmt_execute($stmt);
-
-        $result = mysqli_stmt_get_result($stmt);
+    if (!$params) {
+        $result = mysqli_query($con, $sql);
 
         if (!$result) {
             die('Ошибка получения лотов: ' . mysqli_error($con));
         }
 
-        $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        mysqli_stmt_close($stmt);
-
-        return $lots;
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
 
-    $result = mysqli_query($con, $sql);
+    $stmt = mysqli_prepare($con, $sql);
+
+    if (!$stmt) {
+        die('Ошибка подготовки запроса: ' . mysqli_error($con));
+    }
+
+    mysqli_stmt_bind_param($stmt, $types, ...$params);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
 
     if (!$result) {
         die('Ошибка получения лотов: ' . mysqli_error($con));
     }
 
-    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+
+    return $lots;
 }
 
 /**
@@ -338,6 +358,7 @@ function insert_user(mysqli $link, array $user, string $password): ?int
 
     return $id;
 }
+
 /**
  * Проверяет email и пароль при входе.
  */
@@ -360,5 +381,6 @@ function validate_login(mysqli $link, array $user): array
             $errors['auth'] = 'Вы ввели неверный логин или пароль';
         }
     }
+
     return $errors;
 }
