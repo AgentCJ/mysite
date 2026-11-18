@@ -1,3 +1,4 @@
+
 <?php
 $is_auth = isset($_SESSION['user']);
 $user_name = $is_auth ? $_SESSION['user']['name'] : '';
