@@ -37,6 +37,9 @@ CREATE TABLE IF NOT EXISTS lots
     CONSTRAINT fk_lots_category FOREIGN KEY(category_id) REFERENCES categories(id)
 );
 
+ALTER TABLE lots
+ADD FULLTEXT INDEX lot_search (title, description);
+
 CREATE TABLE IF NOT EXISTS bids
 (
     id INT AUTO_INCREMENT PRIMARY KEY,
