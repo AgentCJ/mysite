@@ -26,7 +26,9 @@ $user_name = $is_auth ? $_SESSION['user']['name'] : '';
             <input class="main-header__search-btn" type="submit" name="find" value="Найти">
         </form>
 
-        <a class="main-header__add-lot button" href="/add.php">Добавить лот</a>
+        <?php if ($is_auth): ?>
+            <a class="main-header__add-lot button" href="/add.php">Добавить лот</a>
+        <?php endif; ?>
 
         <nav class="user-menu">
             <?php if ($is_auth): ?>
@@ -58,7 +60,7 @@ $user_name = $is_auth ? $_SESSION['user']['name'] : '';
         <ul class="nav__list container">
             <?php foreach ($categories as $category): ?>
                 <li class="nav__item">
-                    <a href="/index.php"><?= htmlspecialchars($category["name"], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></a>
+                    <a href="/index.php?category_id=<?= (int) $category['id'] ?>"><?= htmlspecialchars($category["name"], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></a>
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -100,7 +102,9 @@ $user_name = $is_auth ? $_SESSION['user']['name'] : '';
             </a>
         </div>
 
-        <a class="main-footer__add-lot button" href="/add.php">Добавить лот</a>
+        <?php if ($is_auth): ?>
+            <a class="main-footer__add-lot button" href="/add.php">Добавить лот</a>
+        <?php endif; ?>
 
         <div class="main-footer__developed-by">
             <span class="visually-hidden">Разработано:</span>
